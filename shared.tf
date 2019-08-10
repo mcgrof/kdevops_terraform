@@ -12,7 +12,7 @@
 
 variable "file_yaml_vagrant_boxes" {
     description = "Path to the yaml file which has the vagrant_boxes declared as list"
-    default = "../../vagrant/nodes.yaml"
+    default = "../nodes.yaml"
 }
 
 provider "null" {
