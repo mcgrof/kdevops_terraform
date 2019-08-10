@@ -9,7 +9,7 @@
 - name: Copy {{ terraform_dir }}/{{ target }} if it did not exist
   copy:
     src: "{{ role_path }}/{{ target }}"
-    dest: "{{ terraform_dir }}/{{ target }}"
+    dest: "{{ terraform_dir }}"
   run_once: true
   when:
     - stat_terraform_result is success
