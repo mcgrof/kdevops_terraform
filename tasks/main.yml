@@ -1,0 +1,51 @@
+---
+- name: Verify terraform installation
+  command: "which terraform"
+  register: terraform_present
+  changed_when: "terraform_presen.rc == 0"
+  failed_when: terraform_present.rc != 0
+  run_once: true
+  tags: [ 'terraform', 'verify' ]
+
+- name: Stat directory {{ terraform_dir }}
+  stat:
+    path: "{{ terraform_dir }}"
+    follow: yes
+  register: stat_dir_result
+  failed_when:
+  tags: [ 'terraform', 'stat' ]
+
+- name: Verify terraform directory exists {{ terraform_dir }}
+  assert:
+    that:
+      - stat_dir_result is success
+      - stat_dir_result.stat is defined
+      - stat_dir_result.stat.exists
+      - stat_dir_result.stat.isdir
+  tags: [ 'terraform', 'assert' ]
+
+- name: Stat file {{ terraform_node_file }}
+  stat:
+    path: "{{ terraform_node_file }}"
+    follow: yes
+  register: stat_file_result
+  tags: [ 'terraform', 'stat' ]
+
+- name: Verify terraform node configuration file exists {{ terraform_node_file }}
+  assert:
+    that:
+      - stat_file_result is success
+      - stat_file_result.stat is defined
+      - stat_file_result.stat.exists
+      - stat_file_result.stat.isreg
+  tags: [ 'terraform', 'assert' ]
+
+- name: Copy terraform data if not present
+  include_tasks: copy_files.yaml
+  with_items:
+    - "globals.mk"
+    - "Makefile"
+  vars:
+    target: "{{ item }}"
+  loop_control:
+    label: "{{ item }}"

@@ -1,0 +1,18 @@
+---
+- name: Stat {{ terraform_dir }}/{{ target }}
+  stat:
+    path: "{{ terraform_dir }}/{{ target }}"
+    follow: yes
+  register: stat_terraform_result
+  tags: [ 'terraform', 'stat' ]
+
+- name: Copy {{ terraform_dir }}/{{ target }} if it did not exist
+  copy:
+    src: "{{ role_path }}/{{ target }}"
+    dest: "{{ terraform_dir }}/{{ target }}"
+  run_once: true
+  when:
+    - stat_terraform_result is success
+    - stat_terraform_result.stat is success
+    - not stat_terraform_result.stat.exists
+  tags: [ 'terraform', 'copy' ]

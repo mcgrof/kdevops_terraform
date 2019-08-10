@@ -1,0 +1,3 @@
+project_dir: "{% if force_project_dir != '' %}{{ force_project_dir }}{% else %}{{ playbook_dir | dirname }}{% endif %}"
+terraform_dir: "{{ project_dir }}/terraform"
+terraform_node_file: "{{ terraform_dir }}/nodes.yaml"
