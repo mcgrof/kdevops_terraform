@@ -1,24 +1,24 @@
 # Openstack terraform provider main
 
 resource "openstack_compute_secgroup_v2" "fstests_security_group" {
-  name = "${format("%s-%s", var.instance_prefix, "fstests_security_group")}"
+  name        = format("%s-%s", var.instance_prefix, "fstests_security_group")
   description = "security group for fstests"
+
   # SSH
   rule {
-    from_port = 22
-    to_port = 22
+    from_port   = 22
+    to_port     = 22
     ip_protocol = "tcp"
-    cidr = "0.0.0.0/0"
+    cidr        = "0.0.0.0/0"
   }
 
   # All TCP high ports
   rule {
-    from_port = 1024
-    to_port = 65535
+    from_port   = 1024
+    to_port     = 65535
     ip_protocol = "tcp"
-    cidr = "0.0.0.0/0"
+    cidr        = "0.0.0.0/0"
   }
-
 }
 
 # You can upload your ssh key to the OpenStack interface and just set
@@ -38,15 +38,28 @@ resource "openstack_compute_secgroup_v2" "fstests_security_group" {
 # However note that once this resource is destroyed the private key will
 # also be destroyed if you asked terraform to create a new key for you.
 resource "openstack_compute_keypair_v2" "fstest_keypair" {
-  name       = "${var.ssh_pubkey_name}"
-  public_key = "${var.ssh_pubkey_data != "" ? var.ssh_pubkey_data : var.ssh_pubkey_file != "" ? file(var.ssh_pubkey_file) : ""}"
+  name       = var.ssh_pubkey_name
+  public_key = var.ssh_pubkey_data != "" ? var.ssh_pubkey_data : var.ssh_pubkey_file != "" ? file(var.ssh_pubkey_file) : ""
 }
 
 resource "openstack_compute_instance_v2" "fstests_instances" {
-  count           = "${local.num_boxes}"
-  name            = "${replace(urlencode(element(split("name: ", element(data.yaml_list_of_strings.list.output, count.index)), 1)), "%7D", "")}"
-  image_name      = "${var.image_name}"
-  flavor_name     = "${var.flavor_name}"
-  key_pair        = "${var.ssh_pubkey_name}"
-  security_groups = ["${openstack_compute_secgroup_v2.fstests_security_group.name}"]
+  count = local.num_boxes
+  name = replace(
+    urlencode(
+      element(
+        split(
+          "name: ",
+          element(data.yaml_list_of_strings.list.output, count.index),
+        ),
+        1,
+      ),
+    ),
+    "%7D",
+    "",
+  )
+  image_name      = var.image_name
+  flavor_name     = var.flavor_name
+  key_pair        = var.ssh_pubkey_name
+  security_groups = [openstack_compute_secgroup_v2.fstests_security_group.name]
 }
+
