@@ -140,18 +140,3 @@ License
 -------
 
 GPLv2
-# kdevops
-
-kdevops is a sample framework which lets you easily get your Linux devops
-environment going for whatever use case you have. The first use case is to
-provide a devops environment for Linux kernel development testing, and hence
-the name. The goal behind this project is to let you *easily fork it* and
-re-purpose it for whatever kdevops needs you may have.
-
-kdevops relies on vagrant, terraform and ansible to get you going with whatever
-your virtualization / bare metal / cloud provisioning environment easily.
-It realies heavily on public ansible galaxy roles. This lets us share code
-with the community work and allows us to not have to carry all that code
-in this project. Each role focuses on one specific small goal of the
-development focus of kdevops. kdevops then is a bare bones sample demo
-project of the kdevops ansible roles made available to the community.
