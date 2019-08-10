@@ -33,7 +33,10 @@ locals {
 
 # https://github.com/ashald/terraform-provider-yaml
 data "yaml_map_of_strings"  "normal" { input = "${file(local.input)}" }
-data "yaml_map_of_strings"  "flat"   { input = "${file(local.input)}" flatten="/" }
+data "yaml_map_of_strings"  "flat"   {
+	input = "${file(local.input)}"
+	flatten="/"
+}
 
 # You *must* have a section your YAML file with "vagrant_boxes" declaring a
 # list of hosts.
