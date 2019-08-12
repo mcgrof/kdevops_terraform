@@ -15,6 +15,31 @@ variable "file_yaml_vagrant_boxes" {
     default = "../nodes.yaml"
 }
 
+variable "ssh_config" {
+    description = "Path to your ssh_config"
+    default = "/dev/null"
+}
+
+variable "ssh_config_update" {
+    description = "Set this to true if you want terraform to update your ssh_config with the provisioned set of hosts"
+    default = "false"
+}
+
+variable "ssh_config_user" {
+    description = "If ssh_config_update is true, and this is set, it will be the user set for each host on your ssh config"
+    default = ""
+}
+
+variable "ssh_config_use_strict_settings" {
+    description = "Whether or not to use strict settings on ssh_config"
+    default = "no"
+}
+
+variable "ssh_config_backup" {
+    description = "Set this to true if you want to backup your ssh_config per update"
+    default = "no"
+}
+
 provider "null" {
   # any non-beta version >= 2.0.0 and < 2.1.0, e.g. 2.0.1
   version = "~> 2.1"
