@@ -62,3 +62,7 @@ variable "ssh_pubkey_data" {
   default = ""
 }
 
+variable "resource_location" {
+  description = "Resource location"
+  default     = "westus"
+}

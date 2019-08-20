@@ -2,7 +2,7 @@
 
 resource "azurerm_resource_group" "fstests_group" {
   name     = "fstests_resource_group"
-  location = "westus"
+  location = var.resource_location
 
   tags = {
     environment = "fstests tests"
@@ -12,7 +12,7 @@ resource "azurerm_resource_group" "fstests_group" {
 resource "azurerm_virtual_network" "fstests_network" {
   name                = "fstestsNet"
   address_space       = ["10.0.0.0/16"]
-  location            = "westus"
+  location            = var.resource_location
   resource_group_name = azurerm_resource_group.fstests_group.name
 
   tags = {
@@ -30,7 +30,7 @@ resource "azurerm_subnet" "fstests_subnet" {
 resource "azurerm_public_ip" "fstests_publicip" {
   count               = local.num_boxes
   name                = format("fstests_pub_ip_%02d", count.index + 1)
-  location            = "westus"
+  location            = var.resource_location
   resource_group_name = azurerm_resource_group.fstests_group.name
   allocation_method   = "Dynamic"
 
@@ -41,7 +41,7 @@ resource "azurerm_public_ip" "fstests_publicip" {
 
 resource "azurerm_network_security_group" "fstests_sg" {
   name                = "fstetsNetworkSecurityGroup"
-  location            = "westus"
+  location            = var.resource_location
   resource_group_name = azurerm_resource_group.fstests_group.name
 
   security_rule {
@@ -64,7 +64,7 @@ resource "azurerm_network_security_group" "fstests_sg" {
 resource "azurerm_network_interface" "fstests_nic" {
   count                     = local.num_boxes
   name                      = format("fstests_nic_%02d", count.index + 1)
-  location                  = "westus"
+  location                  = var.resource_location
   resource_group_name       = azurerm_resource_group.fstests_group.name
   network_security_group_id = azurerm_network_security_group.fstests_sg.id
 
@@ -94,7 +94,7 @@ resource "azurerm_storage_account" "fstests_storageaccount" {
   count                    = local.num_boxes
   name                     = "diag${element(random_id.randomId.*.hex, count.index)}"
   resource_group_name      = azurerm_resource_group.fstests_group.name
-  location                 = "westus"
+  location                 = var.resource_location
   account_replication_type = "LRS"
   account_tier             = "Standard"
 
@@ -128,7 +128,7 @@ resource "azurerm_virtual_machine" "fstests_vm" {
     "%7D",
     "",
   )
-  location              = "westus"
+  location              = var.resource_location
   resource_group_name   = azurerm_resource_group.fstests_group.name
   network_interface_ids = [element(azurerm_network_interface.fstests_nic.*.id, count.index)]
   vm_size               = "Standard_DS1_v2"
