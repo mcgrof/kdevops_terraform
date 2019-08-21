@@ -15,24 +15,24 @@ data "aws_ami" "distro" {
   owners = ["${var.aws_ami_owner}"]
 }
 
-resource "aws_vpc" "fstests_vpc" {
+resource "aws_vpc" "kdevops_vpc" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
   enable_dns_support   = true
   tags {
-    Name = "fstests"
+    Name = "kdevops"
   }
 }
 
-resource "aws_subnet" "fstests_subnet" {
-  cidr_block          = "${cidrsubnet(aws_vpc.fstests_vpc.cidr_block, 3, 1)}"
-  vpc_id              = "${aws_vpc.fstests_vpc.id}"
+resource "aws_subnet" "kdevops_subnet" {
+  cidr_block          = "${cidrsubnet(aws_vpc.kdevops_vpc.cidr_block, 3, 1)}"
+  vpc_id              = "${aws_vpc.kdevops_vpc.id}"
   availability_zone   = "${var.aws_availability_region}"
 }
 
-resource "aws_security_group" "fstests_sec_group" {
-  name     = "fstests_sg"
-  vpc_id   = "${aws_vpc.fstests_vpc.id}"
+resource "aws_security_group" "kdevops_sec_group" {
+  name     = "kdevops_sg"
+  vpc_id   = "${aws_vpc.kdevops_vpc.id}"
   ingress {
     cidr_blocks = [
       "0.0.0.0/0"
@@ -50,7 +50,7 @@ resource "aws_security_group" "fstests_sec_group" {
   }
 }
 
-resource "aws_key_pair" "fstests_keypair" {
+resource "aws_key_pair" "kdevops_keypair" {
   key_name   = "${var.ssh_keyname}"
   public_key = "${var.ssh_pubkey_data != "" ? var.ssh_pubkey_data : var.ssh_pubkey_file != "" ? file(var.ssh_pubkey_file) : ""}"
 }
@@ -77,7 +77,7 @@ data "template_file" "cloud_init_user_data" {
   }
 }
 
-data "template_cloudinit_config" "fstests_config" {
+data "template_cloudinit_config" "kdevops_config" {
   count         = "${local.num_boxes}"
   gzip          = true
   base64_encode = true
@@ -91,7 +91,7 @@ data "template_cloudinit_config" "fstests_config" {
     content      = "${element(data.template_file.cloud_init_user_data.*.rendered, count.index)}"
   }
 
-  # In case cloud-init modules don't support what we want to do for fstests.
+  # In case cloud-init modules don't support what we want to do for kdevops.
   # But note, we'll want to use ansible for most real provisioning.
   # Using this script fall into a small fine line in between what we cannot
   # accomplish with cloud-init for our initial bootstrap, and what ansible
@@ -102,58 +102,58 @@ data "template_cloudinit_config" "fstests_config" {
   }
 }
 
-resource "aws_instance" "fstests_instance" {
+resource "aws_instance" "kdevops_instance" {
   count             = "${local.num_boxes}"
   ami               = "${data.aws_ami.distro.id}"
   instance_type     = "${var.aws_instance_type}"
-  security_groups   = ["${aws_security_group.fstests_sec_group.id}"]
+  security_groups   = ["${aws_security_group.kdevops_sec_group.id}"]
   key_name          = "${var.ssh_keyname}"
-  subnet_id         = "${aws_subnet.fstests_subnet.id}"
-  user_data_base64  = "${element(data.template_cloudinit_config.fstests_config.*.rendered, count.index)}"
+  subnet_id         = "${aws_subnet.kdevops_subnet.id}"
+  user_data_base64  = "${element(data.template_cloudinit_config.kdevops_config.*.rendered, count.index)}"
 
   tags = {
     Name          = "${replace(urlencode(element(split("name: ", element(data.yaml_list_of_strings.list.output, count.index)), 1)), "%7D", "")}"
   }
 }
 
-resource "aws_ebs_volume" "fstests_vols" {
+resource "aws_ebs_volume" "kdevops_vols" {
   count               = "${var.aws_enable_ebs == "yes" ? local.num_boxes * var.aws_ebs_num_volumes_per_instance : 0 }"
   availability_zone   = "${var.aws_availability_region}"
   size                = "${element(var.aws_ebs_volume_sizes, ceil(count.index / local.num_boxes))}"
 }
 
-resource "aws_volume_attachment" "fstests_att" {
+resource "aws_volume_attachment" "kdevops_att" {
   count             = "${var.aws_enable_ebs == "yes" ? local.num_boxes * var.aws_ebs_num_volumes_per_instance : 0 }"
   device_name       = "${element(var.aws_ebs_device_names, count.index % local.num_boxes)}"
-  volume_id         = "${element(aws_ebs_volume.fstests_vols.*.id, count.index)}"
-  instance_id       = "${element(aws_instance.fstests_instance.*.id, count.index)}"
+  volume_id         = "${element(aws_ebs_volume.kdevops_vols.*.id, count.index)}"
+  instance_id       = "${element(aws_instance.kdevops_instance.*.id, count.index)}"
 }
 
-resource "aws_eip" "fstests_eip" {
+resource "aws_eip" "kdevops_eip" {
   count    = "${local.num_boxes}"
-  instance = "${element(aws_instance.fstests_instance.*.id, count.index)}"
+  instance = "${element(aws_instance.kdevops_instance.*.id, count.index)}"
   vpc      = true
 }
 
-resource "aws_internet_gateway" "fstests_gw" {
-  vpc_id = "${aws_vpc.fstests_vpc.id}"
+resource "aws_internet_gateway" "kdevops_gw" {
+  vpc_id = "${aws_vpc.kdevops_vpc.id}"
   tags {
-    Name = "fstests-gw"
+    Name = "kdevops-gw"
   }
 }
 
-resource "aws_route_table" "fstests_rt" {
-  vpc_id = "${aws_vpc.fstests_vpc.id}"
+resource "aws_route_table" "kdevops_rt" {
+  vpc_id = "${aws_vpc.kdevops_vpc.id}"
     route {
       cidr_block = "0.0.0.0/0"
-      gateway_id = "${aws_internet_gateway.fstests_gw.id}"
+      gateway_id = "${aws_internet_gateway.kdevops_gw.id}"
   }
   tags {
-    Name = "fstests_rt"
+    Name = "kdevops_rt"
   }
 }
 
-resource "aws_route_table_association" "fstests_rt_assoc" {
-  subnet_id      = "${aws_subnet.fstests_subnet.id}"
-  route_table_id = "${aws_route_table.fstests_rt.id}"
+resource "aws_route_table_association" "kdevops_rt_assoc" {
+  subnet_id      = "${aws_subnet.kdevops_subnet.id}"
+  route_table_id = "${aws_route_table.kdevops_rt.id}"
 }

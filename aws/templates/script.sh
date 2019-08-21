@@ -1,5 +1,5 @@
 #!/bin/bash
-# oscheck fstests cloud-init script.
+# oscheck kdevops cloud-init script.
 #
 # This script accepts the following variables set and passed:
 #
@@ -44,11 +44,11 @@ run_cmd_admin()
 mkdir -p ${user_data_log_dir}
 
 if [ "$USERDATA_ENABLED" != "yes" ]; then
-	run_cmd_admin echo "cloud-init: fstests script user data processing disabled"
+	run_cmd_admin echo "cloud-init: kdevops script user data processing disabled"
 	exit 0
 fi
 
-run_cmd_admin echo "cloud-init: fstests script user data processing enabled"
+run_cmd_admin echo "cloud-init: kdevops script user data processing enabled"
 run_cmd_admin echo "Nothing to do..."
 
 # Add more functionality below if you see fit. Be sure to use a variable

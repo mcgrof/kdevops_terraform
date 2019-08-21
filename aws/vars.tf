@@ -50,7 +50,7 @@ variable "ssh_username" {
 
 variable "ssh_keyname" {
     description = "The name of your ssh key, this is just the name displayed and used on aws in the backend"
-    default  = "fstests_aws_key"
+    default  = "kdevops_aws_key"
 }
 
 variable "ssh_pubkey_file" {
@@ -151,7 +151,7 @@ variable "user_data_admin_enable_hostnamectl" {
     default  = "yes"
 }
 
-# fstests does want us to have the hostname there, yes... so this is required.
+# kdevops does want us to have the hostname there, yes... so this is required.
 # I forget which tests requires this.
 variable "user_data_admin_enable_host_file" {
     description = "Should /etc/hosts also be appended with the new hostname with the localhost address?"
