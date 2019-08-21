@@ -14,3 +14,7 @@ crash.log
 terraform-provider-yaml_*
 */terraform-provider-yaml_*
 */crash.log
+
+*.swp
+*/*.swp
+*/*/*.swp
