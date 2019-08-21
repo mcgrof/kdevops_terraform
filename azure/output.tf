@@ -22,11 +22,8 @@ output "fstest_hosts" {
 }
 
 data "azurerm_public_ip" "public_ips" {
-  count = local.num_boxes
-
-  # Note: the name must match the respective name used for the public ip
-  # for the node.
-  name                = format("fstests_pub_ip_%02d", count.index + 1)
+  count               = local.num_boxes
+  name                = element(azurerm_public_ip.fstests_publicip.*.name, count.index)
   resource_group_name = azurerm_resource_group.fstests_group.name
 }
 
@@ -34,3 +31,21 @@ output "fstest_public_ip_addresses" {
   value = data.azurerm_public_ip.public_ips.*.ip_address
 }
 
+locals {
+  ssh_key_i = "${format(" %s%s ", var.ssh_pubkey_file != "" ? "-i " : "", var.ssh_pubkey_file != "" ? replace(var.ssh_pubkey_file, ".pub", "") : "")}"
+}
+
+data "null_data_source" "group_hostnames_and_ips" {
+  count  = "${local.num_boxes}"
+  inputs = {
+    # In theory using "${self.triggers["name"]}" and "${self.triggersp["ip"]}"
+    # would be nice but it is not supported in this context, only in the
+    # provisioner and connection contexts.
+    value = "${format("%30s  :  ssh %s@%s %s ", element(azurerm_virtual_machine.fstests_vm.*.name, count.index), var.ssh_username, element(azurerm_public_ip.fstests_publicip.*.ip_address, count.index), local.ssh_key_i)}"
+  }
+  depends_on = [ "azurerm_public_ip.fstests_publicip" ]
+}
+
+output "login_using" {
+  value = "${data.null_data_source.group_hostnames_and_ips.*.outputs}"
+}
