@@ -17,17 +17,17 @@ data "null_data_source" "host_names" {
   }
 }
 
-output "fstest_hosts" {
+output "kdevops_hosts" {
   value = data.null_data_source.host_names.*.outputs.value
 }
 
 data "azurerm_public_ip" "public_ips" {
   count               = local.num_boxes
-  name                = element(azurerm_public_ip.fstests_publicip.*.name, count.index)
-  resource_group_name = azurerm_resource_group.fstests_group.name
+  name                = element(azurerm_public_ip.kdevops_publicip.*.name, count.index)
+  resource_group_name = azurerm_resource_group.kdevops_group.name
 }
 
-output "fstest_public_ip_addresses" {
+output "kdevops_public_ip_addresses" {
   value = data.azurerm_public_ip.public_ips.*.ip_address
 }
 
@@ -41,9 +41,9 @@ data "null_data_source" "group_hostnames_and_ips" {
     # In theory using "${self.triggers["name"]}" and "${self.triggersp["ip"]}"
     # would be nice but it is not supported in this context, only in the
     # provisioner and connection contexts.
-    value = "${format("%30s  :  ssh %s@%s %s ", element(azurerm_virtual_machine.fstests_vm.*.name, count.index), var.ssh_username, element(azurerm_public_ip.fstests_publicip.*.ip_address, count.index), local.ssh_key_i)}"
+    value = "${format("%30s  :  ssh %s@%s %s ", element(azurerm_virtual_machine.kdevops_vm.*.name, count.index), var.ssh_username, element(azurerm_public_ip.kdevops_publicip.*.ip_address, count.index), local.ssh_key_i)}"
   }
-  depends_on = [ "azurerm_public_ip.fstests_publicip" ]
+  depends_on = [ "azurerm_public_ip.kdevops_publicip" ]
 }
 
 output "login_using" {

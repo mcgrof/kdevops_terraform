@@ -1,48 +1,48 @@
 # Azure terraform provider main
 
-resource "azurerm_resource_group" "fstests_group" {
-  name     = "fstests_resource_group"
+resource "azurerm_resource_group" "kdevops_group" {
+  name     = "kdevops_resource_group"
   location = var.resource_location
 
   tags = {
-    environment = "fstests tests"
+    environment = "kdevops tests"
   }
 }
 
-resource "azurerm_virtual_network" "fstests_network" {
-  name                = "fstestsNet"
+resource "azurerm_virtual_network" "kdevops_network" {
+  name                = "kdevops_net"
   address_space       = ["10.0.0.0/16"]
   location            = var.resource_location
-  resource_group_name = azurerm_resource_group.fstests_group.name
+  resource_group_name = azurerm_resource_group.kdevops_group.name
 
   tags = {
-    environment = "fstests tests"
+    environment = "kdevops tests"
   }
 }
 
-resource "azurerm_subnet" "fstests_subnet" {
-  name                 = "fstestsSubnet"
-  resource_group_name  = azurerm_resource_group.fstests_group.name
-  virtual_network_name = azurerm_virtual_network.fstests_network.name
+resource "azurerm_subnet" "kdevops_subnet" {
+  name                 = "kdevops_subnet"
+  resource_group_name  = azurerm_resource_group.kdevops_group.name
+  virtual_network_name = azurerm_virtual_network.kdevops_network.name
   address_prefix       = "10.0.2.0/24"
 }
 
-resource "azurerm_public_ip" "fstests_publicip" {
+resource "azurerm_public_ip" "kdevops_publicip" {
   count               = local.num_boxes
-  name                = format("fstests_pub_ip_%02d", count.index + 1)
+  name                = format("kdevops_pub_ip_%02d", count.index + 1)
   location            = var.resource_location
-  resource_group_name = azurerm_resource_group.fstests_group.name
+  resource_group_name = azurerm_resource_group.kdevops_group.name
   allocation_method   = "Dynamic"
 
   tags = {
-    environment = "fstests tests"
+    environment = "kdevops tests"
   }
 }
 
-resource "azurerm_network_security_group" "fstests_sg" {
-  name                = "fstetsNetworkSecurityGroup"
+resource "azurerm_network_security_group" "kdevops_sg" {
+  name                = "kdevops_network_security_group"
   location            = var.resource_location
-  resource_group_name = azurerm_resource_group.fstests_group.name
+  resource_group_name = azurerm_resource_group.kdevops_group.name
 
   security_rule {
     name                       = "SSH"
@@ -57,26 +57,26 @@ resource "azurerm_network_security_group" "fstests_sg" {
   }
 
   tags = {
-    environment = "fstests tests"
+    environment = "kdevops tests"
   }
 }
 
-resource "azurerm_network_interface" "fstests_nic" {
+resource "azurerm_network_interface" "kdevops_nic" {
   count                     = local.num_boxes
-  name                      = format("fstests_nic_%02d", count.index + 1)
+  name                      = format("kdevops_nic_%02d", count.index + 1)
   location                  = var.resource_location
-  resource_group_name       = azurerm_resource_group.fstests_group.name
-  network_security_group_id = azurerm_network_security_group.fstests_sg.id
+  resource_group_name       = azurerm_resource_group.kdevops_group.name
+  network_security_group_id = azurerm_network_security_group.kdevops_sg.id
 
   ip_configuration {
-    name                          = "fstestsNicConfiguration"
-    subnet_id                     = azurerm_subnet.fstests_subnet.id
+    name                          = "kdevops_nic_configuration"
+    subnet_id                     = azurerm_subnet.kdevops_subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = element(azurerm_public_ip.fstests_publicip.*.id, count.index)
+    public_ip_address_id          = element(azurerm_public_ip.kdevops_publicip.*.id, count.index)
   }
 
   tags = {
-    environment = "fstests tests"
+    environment = "kdevops tests"
   }
 }
 
@@ -84,26 +84,26 @@ resource "random_id" "randomId" {
   count = local.num_boxes
   keepers = {
     # Generate a new ID only when a new resource group is defined
-    resource_group = azurerm_resource_group.fstests_group.name
+    resource_group = azurerm_resource_group.kdevops_group.name
   }
 
   byte_length = 8
 }
 
-resource "azurerm_storage_account" "fstests_storageaccount" {
+resource "azurerm_storage_account" "kdevops_storageaccount" {
   count                    = local.num_boxes
   name                     = "diag${element(random_id.randomId.*.hex, count.index)}"
-  resource_group_name      = azurerm_resource_group.fstests_group.name
+  resource_group_name      = azurerm_resource_group.kdevops_group.name
   location                 = var.resource_location
   account_replication_type = "LRS"
   account_tier             = "Standard"
 
   tags = {
-    environment = "fstests tests"
+    environment = "kdevops tests"
   }
 }
 
-resource "azurerm_virtual_machine" "fstests_vm" {
+resource "azurerm_virtual_machine" "kdevops_vm" {
   count = local.num_boxes
 
   # As of terraform 0.11 there is no easy way to convert a list to a map
@@ -129,8 +129,8 @@ resource "azurerm_virtual_machine" "fstests_vm" {
     "",
   )
   location              = var.resource_location
-  resource_group_name   = azurerm_resource_group.fstests_group.name
-  network_interface_ids = [element(azurerm_network_interface.fstests_nic.*.id, count.index)]
+  resource_group_name   = azurerm_resource_group.kdevops_group.name
+  network_interface_ids = [element(azurerm_network_interface.kdevops_nic.*.id, count.index)]
   vm_size               = "Standard_DS1_v2"
 
   storage_os_disk {
@@ -138,8 +138,8 @@ resource "azurerm_virtual_machine" "fstests_vm" {
     # means propagating a hack *many* times. It would be better to instead
     # move this hack to a single place using local variables somehow so that
     # we can later adjust the hack *once* instead of many times.
-    #name              = "${format("fstests-main-disk-%s", element(azurerm_virtual_machine.fstests_vm.*.name, count.index))}"
-    name              = format("fstest-main-disk-%02d", count.index + 1)
+    #name              = "${format("kdevops-main-disk-%s", element(azurerm_virtual_machine.kdevops_vm.*.name, count.index))}"
+    name              = format("kdevops-main-disk-%02d", count.index + 1)
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Premium_LRS"
@@ -180,13 +180,13 @@ resource "azurerm_virtual_machine" "fstests_vm" {
   boot_diagnostics {
     enabled = "true"
     storage_uri = element(
-      azurerm_storage_account.fstests_storageaccount.*.primary_blob_endpoint,
+      azurerm_storage_account.kdevops_storageaccount.*.primary_blob_endpoint,
       count.index,
     )
   }
 
   tags = {
-    environment = "fstests tests"
+    environment = "kdevops tests"
   }
 }
 
