@@ -17,14 +17,14 @@ data "null_data_source" "group_hostnames_and_ips" {
         "",
       ),
       element(
-        openstack_compute_instance_v2.fstests_instances.*.access_ip_v4,
+        openstack_compute_instance_v2.kdevops_instances.*.access_ip_v4,
         count.index,
       ),
     )
   }
 }
 
-output "fstest_hosts_and_ipv4" {
+output "kdevops_hosts_and_ipv4" {
   value = data.null_data_source.group_hostnames_and_ips.*.outputs
 }
 

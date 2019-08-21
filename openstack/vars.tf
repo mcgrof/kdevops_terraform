@@ -19,7 +19,7 @@ variable "ssh_pubkey_file" {
 
 variable "ssh_pubkey_name" {
   description = "Name of already existing pubkey or the new one you are about to upload, this must be set"
-  default     = "fstests-pubkey"
+  default     = "kdevops-pubkey"
 }
 
 variable "ssh_pubkey_data" {

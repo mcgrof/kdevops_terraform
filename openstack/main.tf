@@ -1,8 +1,8 @@
 # Openstack terraform provider main
 
-resource "openstack_compute_secgroup_v2" "fstests_security_group" {
-  name        = format("%s-%s", var.instance_prefix, "fstests_security_group")
-  description = "security group for fstests"
+resource "openstack_compute_secgroup_v2" "kdevops_security_group" {
+  name        = format("%s-%s", var.instance_prefix, "kdevops_security_group")
+  description = "security group for kdevops"
 
   # SSH
   rule {
@@ -37,12 +37,12 @@ resource "openstack_compute_secgroup_v2" "fstests_security_group" {
 # terraform.tfvars and a new key pair will be created for you on the fly.
 # However note that once this resource is destroyed the private key will
 # also be destroyed if you asked terraform to create a new key for you.
-resource "openstack_compute_keypair_v2" "fstest_keypair" {
+resource "openstack_compute_keypair_v2" "kdevops_keypair" {
   name       = var.ssh_pubkey_name
   public_key = var.ssh_pubkey_data != "" ? var.ssh_pubkey_data : var.ssh_pubkey_file != "" ? file(var.ssh_pubkey_file) : ""
 }
 
-resource "openstack_compute_instance_v2" "fstests_instances" {
+resource "openstack_compute_instance_v2" "kdevops_instances" {
   count = local.num_boxes
   name = replace(
     urlencode(
@@ -60,6 +60,6 @@ resource "openstack_compute_instance_v2" "fstests_instances" {
   image_name      = var.image_name
   flavor_name     = var.flavor_name
   key_pair        = var.ssh_pubkey_name
-  security_groups = [openstack_compute_secgroup_v2.fstests_security_group.name]
+  security_groups = [openstack_compute_secgroup_v2.kdevops_security_group.name]
 }
 

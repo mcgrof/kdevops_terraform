@@ -34,7 +34,7 @@ data "null_data_source" "group_hostnames_and_ports_v2" {
         split(
           ".",
           element(
-            openstack_compute_instance_v2.fstests_instances.*.access_ip_v4,
+            openstack_compute_instance_v2.kdevops_instances.*.access_ip_v4,
             count.index,
           ),
         ),
@@ -45,7 +45,7 @@ data "null_data_source" "group_hostnames_and_ports_v2" {
           split(
             ".",
             element(
-              openstack_compute_instance_v2.fstests_instances.*.access_ip_v4,
+              openstack_compute_instance_v2.kdevops_instances.*.access_ip_v4,
               count.index,
             ),
           ),
@@ -57,7 +57,7 @@ data "null_data_source" "group_hostnames_and_ports_v2" {
   }
 }
 
-output "fstest_minicloud_port_ip_access_v2" {
+output "kdevops_minicloud_port_ip_access_v2" {
   value = data.null_data_source.group_hostnames_and_ports_v2.*.outputs
 }
 
