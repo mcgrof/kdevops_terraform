@@ -3,8 +3,7 @@
 # described here.
 
 provider "azurerm" {
-  # any non-beta version >= 1.27.0 and < 1.26.0, e.g. 1.27.1
-  version = "~>1.27.0"
+  version = "~>1.32.1"
 
   subscription_id             = var.subscription_id
   client_id                   = var.application_id
