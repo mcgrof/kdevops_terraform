@@ -126,7 +126,46 @@ nodes. Have patience.
 
 ## AWS
 
-AWS is supported. More documentation needs to be added.
+AWS is supported. For authentication we rely on the shared credentials file,
+so you must have the file:
+
+```
+~/.aws/credentials
+```
+
+This file is rather simple with a structure as follows:
+
+```
+[default]
+aws_access_key_id = SOME_ACCESS_KEY
+aws_secret_access_key = SECRET_KEY
+```
+
+The profile above is "default", and you can multiple profiles. By default
+our tarraform's aws vars.tf assumes ~/.aws/credentials as the default
+credentials location, and the profile as "default". If this is different
+for you, you can override with the variables:
+
+```
+aws_shared_credentials_file
+aws_profile
+```
+
+But if your credentials file is `~/.aws/credentials` and the profile
+target is `default`, then your minimum `terraform.tfvars` file should look
+something like this:
+
+```
+aws_region = "us-west-1"
+
+ssh_username = "mcgrof"
+ssh_pubkey_file = "~/.ssh/my-aws.pub"
+```
+
+To read more about shared credentails refer to:
+
+  * https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html
+  * https://docs.aws.amazon.com/powershell/latest/userguide/shared-credentials-in-aws-powershell.html
 
 Further information
 --------------------

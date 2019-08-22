@@ -16,16 +16,6 @@ variable "limit_num_boxes" {
   default     = "4"
 }
 
-variable "aws_access_key" {
-  description = "Your AWS access key"
-  default  = ""
-}
-
-variable "aws_secret_key" {
-  description = "Youre AWS secret key"
-  default  = ""
-}
-
 # This is for North california, if you want another one:
 # https://docs.aws.amazon.com/general/latest/gr/rande.html
 variable "aws_region" {
@@ -158,4 +148,14 @@ variable "user_data_admin_enable_hostnamectl" {
 variable "user_data_admin_enable_host_file" {
   description = "Should /etc/hosts also be appended with the new hostname with the localhost address?"
   default     = "yes"
+}
+
+variable "aws_shared_credentials_file" {
+  description = "Shared aws credentials file"
+  default     = "~/.aws/credentials"
+}
+
+variable "aws_profile" {
+  description = "Shared aws credentials file"
+  default     = "default"
 }
