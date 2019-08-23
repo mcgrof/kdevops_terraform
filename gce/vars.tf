@@ -34,7 +34,7 @@ variable "machine_type" {
 
 variable "image_name" {
   description = "Name of image to use"
-  default     = "debian-cloud/debian-9"
+  default     = "debian-cloud/debian-10"
 }
 
 variable "scratch_disk_interface" {
