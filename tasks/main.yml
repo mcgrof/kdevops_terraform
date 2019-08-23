@@ -49,6 +49,7 @@
     - "azure"
     - "openstack"
     - "aws"
+    - "gce"
   vars:
     target: "{{ item }}"
   loop_control:
