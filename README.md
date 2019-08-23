@@ -117,7 +117,7 @@ and so on.
 
 The default is to not enable ssh configuraiton updates.
 
-# Initial debuggin: limiting the number of host provisioned
+# Initial debugging: limiting the number of host provisioned
 
 When you first starting off you may want to just enable 1 or 2 hosts
 to provision, as otherwise you will have to wait quite a bit of time
@@ -127,6 +127,7 @@ following on terraform.tfvars would ensure only 2 hosts are provisioned
 on the cloud:
 
 ```
+limit_boxes = "yes"
 limit_num_boxes = 2
 ```
 
@@ -172,6 +173,7 @@ ssh_username = "yourcoolusername"
 ssh_pubkey_file = "~/.ssh/minicloud.pub"
 
 # Limit set to 2 to enable only 2 hosts form this project
+limit_boxes = "yes"
 limit_num_boxes = 2
 
 # Updating your ssh config not yet supported on Azure :(
@@ -207,6 +209,7 @@ image_name = "Debian 10 ppc64le"
 flavor_name = "minicloud.tiny"
 
 # Limit set to 2 to enable only 2 hosts form this project
+limit_boxes = "yes"
 limit_num_boxes = 2
 
 ssh_pubkey_file = "~/.ssh/minicloud.pub"
@@ -254,6 +257,7 @@ something like this:
 aws_region = "us-west-1"
 
 # Limit set to 2 to enable only 2 hosts form this project
+limit_boxes = "yes"
 limit_num_boxes = 2
 
 ssh_username = "mcgrof"

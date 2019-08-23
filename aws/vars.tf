@@ -7,13 +7,13 @@
 # to override.
 variable "limit_boxes" {
   description = "Limit the number of nodes created"
-  default     = "yes"
+  default     = "no"
 }
 
-# Seems to be the default for number of cores allowed on the azure demo account.
+# 4 is be the default for number of boxen allowed on the azure demo account
 variable "limit_num_boxes" {
   description = "The max number of boxes we're allowing terraform to create for us"
-  default     = "4"
+  default     = "2"
 }
 
 # This is for North california, if you want another one:
