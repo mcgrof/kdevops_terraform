@@ -222,7 +222,7 @@ ssh_config_backup = "true"
 
 ```
 
-## AWS
+## AWS - Amazon Web Services
 
 AWS is supported. For authentication we rely on the shared credentials file,
 so you must have the file:
@@ -274,9 +274,35 @@ To read more about shared credentails refer to:
   * https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html
   * https://docs.aws.amazon.com/powershell/latest/userguide/shared-credentials-in-aws-powershell.html
 
-# GCE
+## GCE - Google Cloude Compute
 
-XXX: TODO
+This ansible role also supports the GCE on terraform. Below is an example
+terraform.tfvars you may end up with:
+
+```
+project = "demo-kdevops"
+ssh_username = "mcgrof"
+limit_num_boxes = 2
+ssh_pubkey_file = "~/.ssh/my-gce.pub"
+
+# Limit set to 2 to enable only 2 hosts form this project
+limit_boxes = "yes"
+limit_num_boxes = 2
+
+ssh_config = "~/.ssh/config"
+ssh_config_update = "true"
+ssh_config_use_strict_settings = "true"
+ssh_config_backup = "true"
+```
+
+To ramp up, you'll need to get the json for your service account through
+the IMA interface. This is documented below. The default name for the
+json credentails file is account.json, you can override this and its
+path with:
+
+```
+credentials = /home/foo/path/to/some.json
+```
 
 https://www.terraform.io/docs/providers/google/getting_started.html
 https://www.terraform.io/docs/providers/google/index.html
