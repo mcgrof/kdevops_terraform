@@ -106,7 +106,7 @@ tenant_id = "SOME-GUID"
 application_id = "SOME-GUID"
 subscription_id = "SOME-GUID"
 ssh_username = "yourcoolusername"
-ssh_pubkey_data = "ssh-rsa AAASNIP"
+ssh_pubkey_file = "~/.ssh/minicloud.pub"
 ```
 
 ## Openstack
