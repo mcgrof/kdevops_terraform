@@ -270,6 +270,14 @@ To read more about shared credentails refer to:
   * https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html
   * https://docs.aws.amazon.com/powershell/latest/userguide/shared-credentials-in-aws-powershell.html
 
+# GCE
+
+XXX: TODO
+
+https://www.terraform.io/docs/providers/google/getting_started.html
+https://www.terraform.io/docs/providers/google/index.html
+https://cloud.google.com/iam/docs/granting-roles-to-service-accounts#granting_access_to_a_service_account_for_a_resource
+
 Further information
 --------------------
 
