@@ -67,6 +67,10 @@ make deps
 
 # Use a cloud provider
 
+You'll first need to set up your terraform.tfvars file for your cloud
+provider, this is documented below for each cloud provider. After
+that you just run:
+
 ```bash
 cd you_provider
 make deps
@@ -75,7 +79,67 @@ terraform plan
 terraform apply
 ```
 
-Below are more cloud provider specific instructions.
+# Enabling updating your ssh configuration file
+
+This role supports allowing you to update your ssh configuraiton file, this
+is typically your `~/.ssh/config file`, however you can specify a different
+file.
+
+Below is an example set of entries you'd have to add to your own cloud specific
+`terraform.tfvars` file to enable updating your ssh configuration when the
+file:
+
+```
+ssh_config = "~/.ssh/config"
+ssh_config_update = "true"
+ssh_config_use_strict_settings = "true"
+ssh_config_backup = "true"
+```
+
+Enabling the `ssh_config_use_strict_settings` setting will add these
+entries for each host on your configuration file:
+
+```
+	UserKnownHostsFile /dev/null
+	StrictHostKeyChecking no
+	PasswordAuthentication no
+	IdentitiesOnly yes
+	LogLevel FATAL
+```
+
+Enabling `ssh_config_backup` will create a backup of your ssh config file.
+We remove old host entries in one shot on your configuration file for the hosts
+being added, as such we backup the configuration file on removal only once, for
+instance `~/.ssh/config.kdevops.backup.removal`. We backup the configuration
+on addition for each host, `~/.ssh/config.kdevops.backup.add.0` for the first
+host entry, `~/.ssh/config.kdevops.backup.add.1` for the second host entry,
+and so on.
+
+The default is to not enable ssh configuraiton updates.
+
+# Initial debuggin: limiting the number of host provisioned
+
+When you first starting off you may want to just enable 1 or 2 hosts
+to provision, as otherwise you will have to wait quite a bit of time
+for all hosts on a project to provision. We have support to do this on
+all providers with the `limit_num_boxes` variable. For instance the
+following on terraform.tfvars would ensure only 2 hosts are provisioned
+on the cloud:
+
+```
+limit_num_boxes = 2
+```
+
+It is a good idea to use this when doing your first test.
+
+# Destroying provisioned hosts
+
+Since you may be paying for your cloud solution, destroy them after
+instantiating them otherwise you'll pay for lingering hosts. To do so:
+
+```
+terraform destroy
+```
 
 ## Azure
 
@@ -99,7 +163,6 @@ subscription ID. You will need this to set these variables up:
 
 ```
 $ cat terraform.tfvars
-# Do not check this into SCM.
 client_certificate_path = "./service-principal.pfx"
 client_certificate_password = "my-cool-passworsd"
 tenant_id = "SOME-GUID"
@@ -107,22 +170,54 @@ application_id = "SOME-GUID"
 subscription_id = "SOME-GUID"
 ssh_username = "yourcoolusername"
 ssh_pubkey_file = "~/.ssh/minicloud.pub"
+
+# Limit set to 2 to enable only 2 hosts form this project
+limit_num_boxes = 2
+
+# Updating your ssh config not yet supported on Azure :(
+#ssh_config = "~/.ssh/config"
+#ssh_config_update = "true"
+#ssh_config_use_strict_settings = "true"
+#ssh_config_backup = "true"
 ```
 
 ## Openstack
 
-Openstack is supported now. This has been tested with the minicloud openstack.
-This solution relies on the new clouds.yaml file for openstack configuration.
-This simplifies things considerably.
+Openstack is supported. This solution relies on the clouds.yaml file for
+openstack configuration. This simplifies setting up authentication
+considerably.
 
-Since minicloud is an example cloud solution and, since it also has a custom
-setup where the you have to ssh with a special port depending on the IP address
-you get, if you enable minicloud we do this computation for you and tell you
-where to ssh to. Just follow the instructions at the output of `terraform
-plan` to be able to ssh into the open cloud nodes. Please note that minicloud
-takes a while to update its ports / mac address tables, and so you may not be
-able to log in until after about 5 minutes after you are able to create the
-nodes. Have patience.
+### Minicloud Openstack support
+
+minicloud has a custom setup where the you have to ssh with a special port
+depending on the IP address you get, if you enable minicloud we do this
+computation for you and tell you where to ssh to, but we also have support
+to update your ~/ssh/config for you.
+
+Please note that minicloud takes a while to update its ports / mac address
+tables, and so you may not be able to log in until after about 5 minutes after
+you are able to create the nodes. Have patience.
+
+Your terraform.tfvars may look something like:
+
+```
+instance_prefix = "my-random-project"
+
+image_name = "Debian 10 ppc64le"
+flavor_name = "minicloud.tiny"
+
+# Limit set to 2 to enable only 2 hosts form this project
+limit_num_boxes = 2
+
+ssh_pubkey_file = "~/.ssh/minicloud.pub"
+
+ssh_config = "~/.ssh/config"
+ssh_config_user = "debian"
+ssh_config_update = "true"
+ssh_config_use_strict_settings = "true"
+ssh_config_backup = "true"
+
+```
 
 ## AWS
 
@@ -158,8 +253,16 @@ something like this:
 ```
 aws_region = "us-west-1"
 
+# Limit set to 2 to enable only 2 hosts form this project
+limit_num_boxes = 2
+
 ssh_username = "mcgrof"
 ssh_pubkey_file = "~/.ssh/my-aws.pub"
+
+ssh_config = "~/.ssh/config"
+ssh_config_update = "true"
+ssh_config_use_strict_settings = "true"
+ssh_config_backup = "true"
 ```
 
 To read more about shared credentails refer to:
