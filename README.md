@@ -37,7 +37,7 @@ Example Playbook
 ----------------
 
 Below is an example playbook, it is used on the kdevops project,
-so kdevops/playbooks/kdevops_vagrant.yml file:
+so kdevops/playbooks/kdevops_terraform.yml file:
 
 ```
 ---
