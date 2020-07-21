@@ -41,8 +41,3 @@ variable "scratch_disk_interface" {
   description = "The type of interface for the scratch disk, SCSI, or NVME"
   default     = "NVME"
 }
-
-variable "ssh_pubkey_file" {
-  description = "Path to the ssh public key file, alternative to ssh_pubkey_data"
-  default     = "~/.ssh/id_rsa.pub"
-}

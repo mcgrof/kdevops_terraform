@@ -23,7 +23,7 @@ module "ssh_config_update_host_entries" {
   hostnames = join(",", slice(local.ipv4s, 0, local.limit_count))
   ports = "22"
   user = var.ssh_config_user == "" ? "" : var.ssh_config_user
-  id = replace(var.ssh_pubkey_file, ".pub", "")
+  id = replace(var.ssh_config_pubkey_file, ".pub", "")
   strict = var.ssh_config_use_strict_settings != "true" ? "" : "true"
   use_backup = var.ssh_config_backup != "true" || var.ssh_config == "/dev/null" ? "" : "true"
   backup_postfix = "kdevops"

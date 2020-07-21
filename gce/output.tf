@@ -1,5 +1,5 @@
 locals {
-  ssh_key_i = "${format(" %s%s ", var.ssh_pubkey_file != "" ? "-i " : "", var.ssh_pubkey_file != "" ? replace(var.ssh_pubkey_file, ".pub", "") : "")}"
+  ssh_key_i = "${format(" %s%s ", var.ssh_config_pubkey_file != "" ? "-i " : "", var.ssh_config_pubkey_file != "" ? replace(var.ssh_config_pubkey_file, ".pub", "") : "")}"
   network_interfaces = google_compute_instance.kdevops_instances.*.network_interface
   access_configs = [
     for net_interface in local.network_interfaces:

@@ -3,8 +3,8 @@
 locals {
   ssh_key_i = format(
     " %s%s ",
-    var.ssh_pubkey_file != "" ? "-i " : "",
-    var.ssh_pubkey_file != "" ? replace(var.ssh_pubkey_file, ".pub", "") : "",
+    var.ssh_config_pubkey_file != "" ? "-i " : "",
+    var.ssh_config_pubkey_file != "" ? replace(var.ssh_config_pubkey_file, ".pub", "") : "",
   )
 }
 

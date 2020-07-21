@@ -32,7 +32,7 @@ output "kdevops_public_ip_addresses" {
 }
 
 locals {
-  ssh_key_i = "${format(" %s%s ", var.ssh_pubkey_file != "" ? "-i " : "", var.ssh_pubkey_file != "" ? replace(var.ssh_pubkey_file, ".pub", "") : "")}"
+  ssh_key_i = "${format(" %s%s ", var.ssh_config_pubkey_file != "" ? "-i " : "", var.ssh_config_pubkey_file != "" ? replace(var.ssh_config_pubkey_file, ".pub", "") : "")}"
 }
 
 data "null_data_source" "group_hostnames_and_ips" {

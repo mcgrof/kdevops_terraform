@@ -18,7 +18,7 @@ module "ssh_config_update_host_entries_minicloud" {
   hostnames = "minicloud.parqtec.unicamp.br"
   ports = join(",", slice(local.ports_minicloud, 0, local.limit_count_minicloud))
   user = var.ssh_config_user == "" ? "" : var.ssh_config_user
-  id = replace(var.ssh_pubkey_file, ".pub", "")
+  id = replace(var.ssh_config_pubkey_file, ".pub", "")
   strict = var.ssh_config_use_strict_settings != "true" ? "" : "true"
   use_backup = var.ssh_config_backup != "true" || var.ssh_config == "/dev/null" ? "" : "true"
   backup_postfix = "kdevops"

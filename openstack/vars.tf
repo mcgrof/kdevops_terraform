@@ -9,14 +9,6 @@ variable "openstack_cloud" {
   default     = "minicloud"
 }
 
-variable "ssh_pubkey_file" {
-  description = "Path to the ssh public key file, alternative to ssh_pubkey_data"
-
-  # For example:
-  # default  = "~/.ssh/minicloud.pub"
-  default = ""
-}
-
 variable "ssh_pubkey_name" {
   description = "Name of already existing pubkey or the new one you are about to upload, this must be set"
   default     = "kdevops-pubkey"

@@ -32,9 +32,9 @@ variable "ssh_config_user" {
     default = "admin"
 }
 
-variable "ssh_pubkey_file" {
+variable "ssh_config_pubkey_file" {
   description = "Path to the ssh public key file, alternative to ssh_pubkey_data"
-  default     = "~/.ssh/id_rsa.pub"
+  default     = "~/.ssh/kdevops_terraform.pub"
 }
 
 variable "ssh_config_use_strict_settings" {
