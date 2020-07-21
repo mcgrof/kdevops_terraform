@@ -22,7 +22,7 @@ variable "ssh_config" {
 
 variable "ssh_config_update" {
     description = "Set this to true if you want terraform to update your ssh_config with the provisioned set of hosts"
-    default = "false"
+    default = "true"
 }
 
 variable "ssh_config_user" {
@@ -32,12 +32,12 @@ variable "ssh_config_user" {
 
 variable "ssh_config_use_strict_settings" {
     description = "Whether or not to use strict settings on ssh_config"
-    default = "no"
+    default = "yes"
 }
 
 variable "ssh_config_backup" {
     description = "Set this to true if you want to backup your ssh_config per update"
-    default = "no"
+    default = "true"
 }
 
 provider "null" {
