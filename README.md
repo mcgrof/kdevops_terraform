@@ -267,7 +267,7 @@ limit_num_boxes = 2
 
 
 ssh_config_pubkey_file = "~/.ssh/my-aws.pub"
-ssh_config_username = "mcgrof"
+ssh_config_user = "mcgrof"
 ssh_config = "~/.ssh/config"
 ssh_config_update = "true"
 ssh_config_use_strict_settings = "true"
@@ -293,7 +293,7 @@ limit_boxes = "yes"
 limit_num_boxes = 2
 
 ssh_config_pubkey_file = "~/.ssh/my-gce.pub"
-ssh_config_username = "mcgrof"
+ssh_config_user = "mcgrof"
 ssh_config = "~/.ssh/config"
 ssh_config_update = "true"
 ssh_config_use_strict_settings = "true"
