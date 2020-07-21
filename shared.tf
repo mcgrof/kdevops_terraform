@@ -17,7 +17,7 @@ variable "file_yaml_vagrant_boxes" {
 
 variable "ssh_config" {
     description = "Path to your ssh_config"
-    default = "/dev/null"
+    default = "~/.ssh/config"
 }
 
 variable "ssh_config_update" {
