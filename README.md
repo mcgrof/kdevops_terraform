@@ -120,7 +120,8 @@ on addition for each host, `~/.ssh/config.kdevops.backup.add.0` for the first
 host entry, `~/.ssh/config.kdevops.backup.add.1` for the second host entry,
 and so on.
 
-The default is to not enable ssh configuraiton updates.
+The default is we do enable ssh configuraiton updates, given that is the
+same default as used in vagrant for kdevops.
 
 # Initial debugging: limiting the number of host provisioned
 
