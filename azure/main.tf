@@ -166,13 +166,13 @@ resource "azurerm_virtual_machine" "kdevops_vm" {
       "%7D",
       "",
     )
-    admin_username = var.ssh_username
+    admin_username = var.ssh_config_user
   }
 
   os_profile_linux_config {
     disable_password_authentication = true
     ssh_keys {
-      path     = "/home/${var.ssh_username}/.ssh/authorized_keys"
+      path     = "/home/${var.ssh_config_user}/.ssh/authorized_keys"
       key_data = var.ssh_pubkey_data != "" ? var.ssh_pubkey_data : var.ssh_pubkey_file != "" ? file(var.ssh_pubkey_file) : ""
     }
   }

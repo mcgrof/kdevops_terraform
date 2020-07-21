@@ -26,7 +26,7 @@ data "null_data_source" "group_hostnames_and_ips" {
         "%7D",
         "",
       ),
-      var.ssh_username,
+      var.ssh_config_user,
       element(aws_eip.kdevops_eip.*.public_ip, count.index),
       local.ssh_key_i,
     )

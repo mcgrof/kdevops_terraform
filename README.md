@@ -173,7 +173,6 @@ client_certificate_password = "my-cool-passworsd"
 tenant_id = "SOME-GUID"
 application_id = "SOME-GUID"
 subscription_id = "SOME-GUID"
-ssh_username = "yourcoolusername"
 ssh_pubkey_file = "~/.ssh/minicloud.pub"
 
 # Limit set to 2 to enable only 2 hosts form this project
@@ -181,10 +180,11 @@ limit_boxes = "yes"
 limit_num_boxes = 2
 
 # Updating your ssh config not yet supported on Azure :(
-#ssh_config = "~/.ssh/config"
-#ssh_config_update = "true"
-#ssh_config_use_strict_settings = "true"
-#ssh_config_backup = "true"
+ssh_config_user = "yourcoolusername"
+ssh_config = "~/.ssh/config"
+ssh_config_update = "false"
+ssh_config_use_strict_settings = "true"
+ssh_config_backup = "true"
 ```
 
 ## Openstack
@@ -264,9 +264,9 @@ aws_region = "us-west-1"
 limit_boxes = "yes"
 limit_num_boxes = 2
 
-ssh_username = "mcgrof"
 ssh_pubkey_file = "~/.ssh/my-aws.pub"
 
+ssh_config_username = "mcgrof"
 ssh_config = "~/.ssh/config"
 ssh_config_update = "true"
 ssh_config_use_strict_settings = "true"
@@ -285,7 +285,6 @@ terraform.tfvars you may end up with:
 
 ```
 project = "demo-kdevops"
-ssh_username = "mcgrof"
 limit_num_boxes = 2
 ssh_pubkey_file = "~/.ssh/my-gce.pub"
 
@@ -293,6 +292,7 @@ ssh_pubkey_file = "~/.ssh/my-gce.pub"
 limit_boxes = "yes"
 limit_num_boxes = 2
 
+ssh_config_username = "mcgrof"
 ssh_config = "~/.ssh/config"
 ssh_config_update = "true"
 ssh_config_use_strict_settings = "true"

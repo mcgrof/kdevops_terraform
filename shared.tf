@@ -25,9 +25,16 @@ variable "ssh_config_update" {
     default = "true"
 }
 
+# Debian AWS ami's use admin as the default user, we override it with cloud-init
+# for whatever username you set here.
 variable "ssh_config_user" {
     description = "If ssh_config_update is true, and this is set, it will be the user set for each host on your ssh config"
-    default = ""
+    default = "admin"
+}
+
+variable "ssh_pubkey_file" {
+  description = "Path to the ssh public key file, alternative to ssh_pubkey_data"
+  default     = "~/.ssh/id_rsa.pub"
 }
 
 variable "ssh_config_use_strict_settings" {

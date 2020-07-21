@@ -5,4 +5,4 @@ hostname: ${new_hostname}
 
 system_info:
   default_user:
-    name: ${ssh_username}
+    name: ${ssh_config_user}

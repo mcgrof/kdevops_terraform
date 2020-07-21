@@ -41,7 +41,7 @@ data "null_data_source" "group_hostnames_and_ips" {
     # In theory using "${self.triggers["name"]}" and "${self.triggersp["ip"]}"
     # would be nice but it is not supported in this context, only in the
     # provisioner and connection contexts.
-    value = "${format("%30s  :  ssh %s@%s %s ", element(azurerm_virtual_machine.kdevops_vm.*.name, count.index), var.ssh_username, element(azurerm_public_ip.kdevops_publicip.*.ip_address, count.index), local.ssh_key_i)}"
+    value = "${format("%30s  :  ssh %s@%s %s ", element(azurerm_virtual_machine.kdevops_vm.*.name, count.index), var.ssh_config_user, element(azurerm_public_ip.kdevops_publicip.*.ip_address, count.index), local.ssh_key_i)}"
   }
   depends_on = [ "azurerm_public_ip.kdevops_publicip" ]
 }

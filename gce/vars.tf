@@ -42,11 +42,6 @@ variable "scratch_disk_interface" {
   default     = "NVME"
 }
 
-variable "ssh_username" {
-  description = "The ssh user to use"
-  default     = "aurelia"
-}
-
 variable "ssh_pubkey_file" {
   description = "Path to the ssh public key file, alternative to ssh_pubkey_data"
   default     = "~/.ssh/id_rsa.pub"

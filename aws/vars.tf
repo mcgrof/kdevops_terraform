@@ -31,21 +31,9 @@ variable "aws_availability_region" {
   default     = "us-west-1b"
 }
 
-# Debian ami's use admin as the default user, we override it with cloud-init
-# for whatever username you set here.
-variable "ssh_username" {
-  description = "The ssh user to use"
-  default     = "admin"
-}
-
 variable "ssh_keyname" {
   description = "The name of your ssh key, this is just the name displayed and used on aws in the backend"
   default     = "kdevops_aws_key"
-}
-
-variable "ssh_pubkey_file" {
-  description = "Path to the ssh public key file, alternative to ssh_pubkey_data"
-  default     = "~/.ssh/id_rsa.pub"
 }
 
 variable "ssh_pubkey_data" {

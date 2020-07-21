@@ -63,7 +63,7 @@ data "template_file" "script_user_data" {
   vars = {
     user_data_log_dir = var.user_data_log_dir
     user_data_enabled = var.user_data_enabled
-    ssh_username      = var.ssh_username
+    ssh_config_user = var.ssh_config_user
     new_hostname = replace(
       urlencode(
         element(
@@ -98,7 +98,7 @@ data "template_file" "cloud_init_user_data" {
       "%7D",
       "",
     )
-    ssh_username = var.ssh_username
+    ssh_config_user = var.ssh_config_user
   }
 }
 
