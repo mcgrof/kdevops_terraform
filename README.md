@@ -94,6 +94,7 @@ Below is an example set of entries you'd have to add to your own cloud specific
 file:
 
 ```
+ssh_config_pubkey_file = "~/.ssh/minicloud.pub"
 ssh_config = "~/.ssh/config"
 ssh_config_update = "true"
 ssh_config_use_strict_settings = "true"
