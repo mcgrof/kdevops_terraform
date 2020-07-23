@@ -94,17 +94,33 @@ variable "aws_ebs_num_volumes_per_instance" {
   default     = "1"
 }
 
-# Sigh.. These are required!
+# Sigh.. These are required! And oh my, what a mess this is...
+#
+# Notes: on a t2.micro with 2 hosts we should use /dev/sdh /dev/sdh in this
+# this list, but note that this will actually map to /dev/xvdh on both hosts.
+# And if you don't do that, and you use /dev/sdh, dev/sdi here then the
+# first host will get /dev/xvdh and the second one /dev/xvdi
+#
+# The first aws instance type to support nvme is the c5d.large with just one
+# nvme drive. But subsequent EBS drivers get pegged as nvme as well. *And*
+# even if you want to use nvme, you must use /dev/sdh /dev/sdh here...
+#
+# To avoid this mess just pick a damn instance name with the drive setup
+# you need for development, if you can afford it.
 variable "aws_ebs_device_names" {
   description = "The EBS device names to use"
   type        = list(string)
-  default     = ["/dev/sdh", "/dev/sdi"]
+  default     = ["/dev/sdh", "/dev/sdh"]
 }
 
 # The t2.micro comes with 8 GiB of storage.
 # For more storage we need to use EBS.
 # AWS Free Tier includes 30GB of Storage, 2 million I/Os, and 1GB of snapshot
 # storage with Amazon Elastic Block Store (EBS).
+#
+# Note: if using two hosts and you specify here 30 and 150, this means the
+# first EBS will be pegged on to the first host with 30 GiB, and the second
+# EBS to the second host with 150 GiB in size.
 variable "aws_ebs_volume_sizes" {
   type        = list(string)
   description = "Size in GiB for each of the volumes"
