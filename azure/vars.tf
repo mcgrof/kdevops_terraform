@@ -56,3 +56,33 @@ variable "resource_location" {
   description = "Resource location"
   default     = "westus"
 }
+
+variable "vmsize" {
+  description = "VM size"
+  default     = "Standard_DS1_v2"
+}
+
+variable "managed_disk_type" {
+  description = "Managed disk type"
+  default     = "Premium_LRS"
+}
+
+variable "image_publisher" {
+  description = "Storage image publisher"
+  default     = "credativ"
+}
+
+variable "image_offer" {
+  description = "Storage image offer"
+  default     = "Debian-10"
+}
+
+variable "image_sku" {
+  description = "Storage image sku"
+  default     = "10"
+}
+
+variable "image_version " {
+  description = "Storage image version"
+  default     = "version"
+}

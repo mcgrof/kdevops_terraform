@@ -131,7 +131,7 @@ resource "azurerm_virtual_machine" "kdevops_vm" {
   location              = var.resource_location
   resource_group_name   = azurerm_resource_group.kdevops_group.name
   network_interface_ids = [element(azurerm_network_interface.kdevops_nic.*.id, count.index)]
-  vm_size               = "Standard_DS1_v2"
+  vm_size               = var.vmsize
 
   storage_os_disk {
     # Note: yes using the names like the ones below is better however it also
@@ -142,14 +142,14 @@ resource "azurerm_virtual_machine" "kdevops_vm" {
     name              = format("kdevops-main-disk-%02d", count.index + 1)
     caching           = "ReadWrite"
     create_option     = "FromImage"
-    managed_disk_type = "Premium_LRS"
+    managed_disk_type = var.managed_disk_type
   }
 
   storage_image_reference {
-    publisher = "credativ"
-    offer     = "Debian"
-    sku       = "9"
-    version   = "latest"
+    publisher = var.image_publisher
+    offer     = var.image_offer
+    sku       = var.image_sku
+    version   = var.image_version
   }
 
   os_profile {
