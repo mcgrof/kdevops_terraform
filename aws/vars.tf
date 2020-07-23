@@ -86,7 +86,7 @@ variable "aws_instance_type" {
 
 variable "aws_enable_ebs" {
   description = "Whether or not to enable EBS"
-  default     = "yes"
+  default     = "no"
 }
 
 variable "aws_ebs_num_volumes_per_instance" {
@@ -124,7 +124,7 @@ variable "aws_ebs_device_names" {
 variable "aws_ebs_volume_sizes" {
   type        = list(string)
   description = "Size in GiB for each of the volumes"
-  default     = ["30", "150"]
+  default     = ["150", "160"]
 }
 
 # We had to use this as aws terraform provider doesn't have a way to set
