@@ -5,9 +5,7 @@ kdevops_terraform is an ansible role which deploys a set of community shared
 kdevops terraform file into your project. This ansible role copies all the
 terraform files needed to run terraform with different supported cloud
 providers. You will be able to provision your target hosts and ssh into
-them as we update your ~/.ssh/config for you as well. When the cloud
-provider did the right thing in the backend, you should be able to ssh
-into the hosts as soon as terraform completes its work.
+them as we update your ~/.ssh/config for you as well.
 
 The goal behind this ansible role to allow the ability to *share* the same
 set of terraform files between projects, and gives the terraform files a home
@@ -184,7 +182,7 @@ limit_num_boxes = 2
 ssh_config_pubkey_file = "~/.ssh/minicloud.pub"
 ssh_config_user = "yourcoolusername"
 ssh_config = "~/.ssh/config"
-ssh_config_update = "false"
+ssh_config_update = "true"
 ssh_config_use_strict_settings = "true"
 ssh_config_backup = "true"
 ```
