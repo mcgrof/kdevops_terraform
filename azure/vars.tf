@@ -69,12 +69,12 @@ variable "managed_disk_type" {
 
 variable "image_publisher" {
   description = "Storage image publisher"
-  default     = "credativ"
+  default     = "Debian"
 }
 
 variable "image_offer" {
   description = "Storage image offer"
-  default     = "Debian-10"
+  default     = "debian-10"
 }
 
 variable "image_sku" {
@@ -84,5 +84,5 @@ variable "image_sku" {
 
 variable "image_version" {
   description = "Storage image version"
-  default     = "version"
+  default     = "latest"
 }
