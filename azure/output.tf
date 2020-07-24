@@ -43,7 +43,7 @@ data "null_data_source" "group_hostnames_and_ips" {
     # provisioner and connection contexts.
     value = "${format("%30s  :  ssh %s@%s %s ", element(azurerm_virtual_machine.kdevops_vm.*.name, count.index), var.ssh_config_user, element(azurerm_public_ip.kdevops_publicip.*.ip_address, count.index), local.ssh_key_i)}"
   }
-  depends_on = [ "azurerm_public_ip.kdevops_publicip" ]
+  depends_on = [ azurerm_public_ip.kdevops_publicip ]
 }
 
 output "login_using" {

@@ -82,7 +82,7 @@ variable "image_sku" {
   default     = "10"
 }
 
-variable "image_version " {
+variable "image_version" {
   description = "Storage image version"
   default     = "version"
 }
