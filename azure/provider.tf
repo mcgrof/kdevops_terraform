@@ -3,7 +3,8 @@
 # described here.
 
 provider "azurerm" {
-  version = "~>1.32.1"
+  version = "~>2.1.0"
+  features {}
 
   subscription_id             = var.subscription_id
   client_id                   = var.application_id

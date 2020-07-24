@@ -61,12 +61,17 @@ resource "azurerm_network_security_group" "kdevops_sg" {
   }
 }
 
+resource "azurerm_network_interface_security_group_association" "kdevops_sg_assoc" {
+  count                     = local.num_boxes
+  network_security_group_id = azurerm_network_security_group.kdevops_sg.id
+  network_interface_id = element(azurerm_network_interface.kdevops_nic.*.id, count.index)
+}
+
 resource "azurerm_network_interface" "kdevops_nic" {
   count                     = local.num_boxes
   name                      = format("kdevops_nic_%02d", count.index + 1)
   location                  = var.resource_location
   resource_group_name       = azurerm_resource_group.kdevops_group.name
-  network_security_group_id = azurerm_network_security_group.kdevops_sg.id
 
   ip_configuration {
     name                          = "kdevops_nic_configuration"
@@ -103,7 +108,7 @@ resource "azurerm_storage_account" "kdevops_storageaccount" {
   }
 }
 
-resource "azurerm_virtual_machine" "kdevops_vm" {
+resource "azurerm_linux_virtual_machine" "kdevops_vm" {
   count = local.num_boxes
 
   # As of terraform 0.11 there is no easy way to convert a list to a map
@@ -131,55 +136,36 @@ resource "azurerm_virtual_machine" "kdevops_vm" {
   location              = var.resource_location
   resource_group_name   = azurerm_resource_group.kdevops_group.name
   network_interface_ids = [element(azurerm_network_interface.kdevops_nic.*.id, count.index)]
-  vm_size               = var.vmsize
+  size                  = var.vmsize
+  admin_username        = var.ssh_config_user
+  disable_password_authentication = true
 
-  storage_os_disk {
+  os_disk {
     # Note: yes using the names like the ones below is better however it also
     # means propagating a hack *many* times. It would be better to instead
     # move this hack to a single place using local variables somehow so that
     # we can later adjust the hack *once* instead of many times.
-    #name              = "${format("kdevops-main-disk-%s", element(azurerm_virtual_machine.kdevops_vm.*.name, count.index))}"
-    name              = format("kdevops-main-disk-%02d", count.index + 1)
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = var.managed_disk_type
+    #name                 = "${format("kdevops-main-disk-%s", element(azurerm_virtual_machine.kdevops_vm.*.name, count.index))}"
+    name                  = format("kdevops-main-disk-%02d", count.index + 1)
+    caching               = "ReadWrite"
+    storage_account_type  = var.managed_disk_type
+    #disk_size_gb         = 64
   }
 
-  storage_image_reference {
+  source_image_reference {
     publisher = var.image_publisher
     offer     = var.image_offer
     sku       = var.image_sku
     version   = var.image_version
   }
 
-  os_profile {
-    computer_name = replace(
-      urlencode(
-        element(
-          split(
-            "name: ",
-            element(data.yaml_list_of_strings.list.output, count.index),
-          ),
-          1,
-        ),
-      ),
-      "%7D",
-      "",
-    )
-    admin_username = var.ssh_config_user
-  }
-
-  os_profile_linux_config {
-    disable_password_authentication = true
-    ssh_keys {
-      path     = "/home/${var.ssh_config_user}/.ssh/authorized_keys"
-      key_data = var.ssh_pubkey_data != "" ? var.ssh_pubkey_data : var.ssh_config_pubkey_file != "" ? file(var.ssh_config_pubkey_file) : ""
-    }
+  admin_ssh_key {
+    username      = var.ssh_config_user
+    public_key    = var.ssh_config_pubkey_file != "" ? file(var.ssh_config_pubkey_file) : ""
   }
 
   boot_diagnostics {
-    enabled = "true"
-    storage_uri = element(
+    storage_account_uri = element(
       azurerm_storage_account.kdevops_storageaccount.*.primary_blob_endpoint,
       count.index,
     )
@@ -190,3 +176,40 @@ resource "azurerm_virtual_machine" "kdevops_vm" {
   }
 }
 
+resource "azurerm_managed_disk" "kdevops_data_disk" {
+  count                = local.num_boxes
+  name                 = format("kdevops-data-disk-%02d", count.index + 1)
+  location             = var.resource_location
+  resource_group_name  = azurerm_resource_group.kdevops_group.name
+  create_option        = "Empty"
+  storage_account_type = var.managed_disk_type
+  disk_size_gb         = 100
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "kdevops_data_disk" {
+  count                     = local.num_boxes
+  managed_disk_id           = azurerm_managed_disk.kdevops_data_disk[count.index].id
+  virtual_machine_id        = element(azurerm_linux_virtual_machine.kdevops_vm.*.id, count.index)
+  caching                   = "None"
+  write_accelerator_enabled = false
+  lun                       = count.index
+}
+
+resource "azurerm_managed_disk" "kdevops_scratch_disk" {
+  count                = local.num_boxes
+  name                 = format("kdevops-scratch-disk-%02d", count.index + 1)
+  location             = var.resource_location
+  resource_group_name  = azurerm_resource_group.kdevops_group.name
+  create_option        = "Empty"
+  storage_account_type = var.managed_disk_type
+  disk_size_gb         = 100
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "kdevops_scratch_disk" {
+  count                     = local.num_boxes
+  managed_disk_id           = azurerm_managed_disk.kdevops_scratch_disk[count.index].id
+  virtual_machine_id        = element(azurerm_linux_virtual_machine.kdevops_vm.*.id, count.index)
+  caching                   = "None"
+  write_accelerator_enabled = false
+  lun                       = count.index
+}
