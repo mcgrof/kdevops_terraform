@@ -59,7 +59,7 @@ variable "resource_location" {
 
 variable "vmsize" {
   description = "VM size"
-  default     = "Standard_DS1_v2"
+  default     = "Standard_DS3_v2"
 }
 
 variable "managed_disk_type" {
