@@ -20,3 +20,10 @@ module "ssh_config_update_host_entries" {
   use_backup = var.ssh_config_backup != "true" || var.ssh_config == "/dev/null" ? "" : "true"
   backup_postfix = "kdevops"
 }
+
+resource "null_resource" "ansible_call" {
+  provisioner "local-exec" {
+    command = "ansible-playbook -i ../../hosts ../../playbooks/devconfig.yml --extra-vars='data_home_dir=/home/${var.ssh_config_user}'"
+  }
+  depends_on = [ module.ssh_config_update_host_entries ]
+}
