@@ -1,3 +1,13 @@
+data "template_file" "ansible_cmd" {
+  template = "${file("ansible_provision_cmd.tpl")}"
+  vars {
+    inventory = "../../${var.ansible_inventory}"
+    playbook_dir = "../../${var.ansible_playbookdir}/"
+    provision_playbook = "${var.ansible_provision_playbook}"
+    extra_args = "--extra-vars='data_home_dir=/home/${var.ssh_config_user}'"
+  }
+}
+
 locals {
   limit_count = var.ssh_config_update != "true" ? 0 : local.num_boxes
   shorthosts = azurerm_linux_virtual_machine.kdevops_vm.*.name
@@ -23,7 +33,7 @@ module "ssh_config_update_host_entries" {
 
 resource "null_resource" "ansible_call" {
   provisioner "local-exec" {
-    command = "ansible-playbook -i ../../hosts ../../playbooks/devconfig.yml --extra-vars='data_home_dir=/home/${var.ssh_config_user}'"
+    command = "${local.ansible_cmd}'"
   }
   depends_on = [ module.ssh_config_update_host_entries ]
 }

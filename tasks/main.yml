@@ -58,6 +58,7 @@
     - "globals.mk"
     - "Makefile"
     - "shared.tf"
+    - "ansible_provision_cmd.tpl"
     - "azure"
     - "openstack"
     - "aws"
