@@ -1,3 +1,7 @@
+Makefile
+globals.mk
+shared.tf
+
 terraform.tfvars
 terraform.tfstate
 terraform.tfstate.backup
@@ -10,6 +14,15 @@ crash.log
 */terraform.tfstate.backup
 */.terraform
 */.terraform.tfstate.lock.info
+
+*/versions.tf
+
+ansible_provision_cmd.tpl
+*/ansible_provision_cmd.tpl
+
+openstack/clouds-public.yaml
+openstack/output_minicloud.tf
+openstack/update_ssh_config_minicloud.tf
 
 terraform-provider-yaml_*
 */terraform-provider-yaml_*
