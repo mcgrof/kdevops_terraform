@@ -192,7 +192,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "kdevops_data_disk" {
   virtual_machine_id        = element(azurerm_linux_virtual_machine.kdevops_vm.*.id, count.index)
   caching                   = "None"
   write_accelerator_enabled = false
-  lun                       = count.index
+  lun                       = 0 + count.index
 }
 
 resource "azurerm_managed_disk" "kdevops_scratch_disk" {
@@ -211,5 +211,5 @@ resource "azurerm_virtual_machine_data_disk_attachment" "kdevops_scratch_disk" {
   virtual_machine_id        = element(azurerm_linux_virtual_machine.kdevops_vm.*.id, count.index)
   caching                   = "None"
   write_accelerator_enabled = false
-  lun                       = count.index
+  lun                       = 2 + count.index
 }
