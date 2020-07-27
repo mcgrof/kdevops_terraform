@@ -23,7 +23,7 @@ module "ssh_config_update_host_entries" {
 
 resource "null_resource" "ansible_call" {
   provisioner "local-exec" {
-    command = "${local.ansible_cmd}'"
+    command = local.ansible_cmd
   }
   depends_on = [ module.ssh_config_update_host_entries ]
 }
