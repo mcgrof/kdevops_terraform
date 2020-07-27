@@ -17,13 +17,6 @@ crash.log
 
 */versions.tf
 
-ansible_provision_cmd.tpl
-*/ansible_provision_cmd.tpl
-
-openstack/clouds-public.yaml
-openstack/output_minicloud.tf
-openstack/update_ssh_config_minicloud.tf
-
 terraform-provider-yaml_*
 */terraform-provider-yaml_*
 */crash.log
