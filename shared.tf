@@ -104,7 +104,7 @@ locals {
 
 data "template_file" "ansible_cmd" {
   template = "${file("ansible_provision_cmd.tpl")}"
-  vars {
+  vars = {
     inventory = "../../${var.ansible_inventory}"
     playbook_dir = "../../${var.ansible_playbookdir}/"
     provision_playbook = "${var.ansible_provision_playbook}"
@@ -114,5 +114,5 @@ data "template_file" "ansible_cmd" {
 
 locals {
   skip_ansible_cmd = "echo Skipping ansible provisioning"
-  ansible_cmd = var.ansible_provision == "true" ? "${data.template_file.ansible_cmd.rendered}" : skip_ansible_cmd
+  ansible_cmd = var.ansible_provision == "true" ? "${data.template_file.ansible_cmd.rendered}" : "${local.skip_ansible_cmd}"
 }
