@@ -28,6 +28,10 @@ resource "google_compute_instance" "kdevops_instances" {
     interface = var.scratch_disk_interface
   }
 
+  scratch_disk {
+    interface = var.scratch_disk_interface
+  }
+
   network_interface {
     network = "default"
 
