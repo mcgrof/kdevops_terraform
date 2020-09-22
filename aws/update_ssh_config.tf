@@ -14,7 +14,7 @@ locals {
 
 module "ssh_config_update_host_entries" {
   source  = "mcgrof/add-host-ssh-config/kdevops"
-  version = "1.2.0"
+  version = "2.0.0"
 
   ssh_config = var.ssh_config
   update_ssh_config_enable = local.limit_count > 0 ? "true" : ""
