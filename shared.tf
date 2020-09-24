@@ -47,6 +47,11 @@ variable "ssh_config_backup" {
     default = "true"
 }
 
+variable "ssh_kexalgorithms" {
+    description = "If set, this sets a custom ssh kexalgorithms"
+    default = "true"
+}
+
 variable "ansible_provision" {
     description = "Set this to true if you want to enable ansible provisioning"
     default = "true"

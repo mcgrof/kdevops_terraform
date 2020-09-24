@@ -9,7 +9,7 @@ locals {
 
 module "ssh_config_update_host_entries_minicloud" {
   source  = "mcgrof/add-host-ssh-config/kdevops"
-  version = "2.0.0"
+  version = "2.1.0"
 
   ssh_config = var.ssh_config
   update_ssh_config_enable = local.limit_count_minicloud > 0 ? "true" : ""
@@ -22,6 +22,7 @@ module "ssh_config_update_host_entries_minicloud" {
   strict = var.ssh_config_use_strict_settings != "true" ? "" : "true"
   use_backup = var.ssh_config_backup != "true" || var.ssh_config == "/dev/null" ? "" : "true"
   backup_postfix = "kdevops"
+  kexalgorithms = var.ssh_kexalgorithms == "" ? "" : var.ssh_kexalgorithms
 }
 
 resource "null_resource" "ansible_call" {
