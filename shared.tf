@@ -49,7 +49,7 @@ variable "ssh_config_backup" {
 
 variable "ssh_config_kexalgorithms" {
     description = "If set, this sets a custom ssh kexalgorithms"
-    default = "true"
+    default = ""
 }
 
 variable "ansible_provision" {
