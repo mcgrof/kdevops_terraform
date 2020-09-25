@@ -47,7 +47,7 @@ variable "ssh_config_backup" {
     default = "true"
 }
 
-variable "ssh_kexalgorithms" {
+variable "ssh_config_kexalgorithms" {
     description = "If set, this sets a custom ssh kexalgorithms"
     default = "true"
 }
